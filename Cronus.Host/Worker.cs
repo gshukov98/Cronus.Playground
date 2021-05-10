@@ -100,7 +100,6 @@ namespace Cronus.Host
             List<ICommand> list = new List<ICommand>();
             for (int i = 0; i < count; i++)
             {
-                SimpleMessageId simpleMessageId = new SimpleMessageId(Guid.NewGuid().ToString(), "elders");
                 ICommand message = Activator.CreateInstance<T>() as ICommand;
                 list.Add(message);
             }
