@@ -82,8 +82,8 @@ namespace Cronus.Host
             for (int i = 0; i < count / batchSize; i++)
             {
                 List<ICommand> batch = commands.Skip(batchSize * i).Take(batchSize).ToList();
-
                 SendCommandsGG(batch);
+                Thread.Sleep(delay);
             }
         }
 
