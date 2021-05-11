@@ -9,6 +9,11 @@ namespace Cronus.Contracts
     public class SimpleMessageProjection : ProjectionDefinition<SimpleMessageProjectionState, SimpleMessageId>, IProjection,
         IEventHandler<SimpleMessageCreated>
     {
+        public SimpleMessageProjection()
+        {
+            Subscribe<SimpleMessageCreated>(x => x.Id);
+        }
+
         public void Handle(SimpleMessageCreated @event)
         {
             State.LastModificationDate = @event.Timestamp;

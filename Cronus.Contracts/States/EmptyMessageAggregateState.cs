@@ -1,4 +1,5 @@
-﻿using Cronus.Contracts.Aggregates;
+﻿using Cronus.Contracts.AggregateRootIDs;
+using Cronus.Contracts.Aggregates;
 using Cronus.Contracts.Events;
 using Elders.Cronus;
 using System;
@@ -7,12 +8,12 @@ using System.Text;
 
 namespace Cronus.Contracts.States
 {
-    public class GGMessageAggregateState : AggregateRootState<GGMessageAggregate, SimpleMessageId>
+    public class EmptyMessageAggregateState : AggregateRootState<EmptyMessageAggregate, EmptyMessageId>
     {
-        public override SimpleMessageId Id { get; set; }
+        public override EmptyMessageId Id { get; set; }
         public DateTimeOffset Timestamp { get; private set; }
 
-        public void When(GGMessageCreated @event)
+        public void When(EmptyMessageCreated @event)
         {
             this.Id = @event.Id;
             this.Timestamp = @event.Timestamp;

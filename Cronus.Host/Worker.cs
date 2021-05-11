@@ -36,7 +36,7 @@ namespace Cronus.Host
             _logger.LogInformation("Service started");
 
             //Input number of messages and type of messages
-            var list = CreateMessages<CreateGGMessage>(5);
+            var list = CreateMessages<CreateSimpleMessage>(10_000);
 
             //Input list of commangs, batchSize and delay
             //If batch size is less than 1 all messages that will be sent together
@@ -65,7 +65,7 @@ namespace Cronus.Host
         {
             //Don't have implementation for Handle in AppService
             SimpleMessageId simpleMessageId = new SimpleMessageId(Guid.NewGuid().ToString(), "elders");
-            commandPublisher.Publish(new CreateGGMessage(simpleMessageId, DateTimeOffset.Now));
+            commandPublisher.Publish(new CreateEmptyMessage(simpleMessageId, DateTimeOffset.Now));
         }
         ///////////////////////////////////////////////////////////////////////////////////
         #endregion
@@ -112,7 +112,7 @@ namespace Cronus.Host
             for (int i = 0; i < count; i++)
             {
                 SimpleMessageId simpleMessageId = new SimpleMessageId(Guid.NewGuid().ToString(), "elders");
-                var message = new CreateGGMessage(simpleMessageId, DateTimeOffset.UtcNow);
+                var message = new CreateEmptyMessage(simpleMessageId, DateTimeOffset.UtcNow);
                 list.Add(message);
             }
             return list;

@@ -6,7 +6,7 @@ namespace Cronus.Contracts
     [DataContract(Name = "d4889cbb-aa8d-4b6b-b10d-93cc88d51cc4")]
     public class SimpleMessageId : AggregateRootId<SimpleMessageId>
     {
-        const string RootName = "user";
+        const string RootName = "simple";
 
         private SimpleMessageId() { }
 

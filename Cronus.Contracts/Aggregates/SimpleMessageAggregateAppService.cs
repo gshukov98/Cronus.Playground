@@ -4,7 +4,7 @@ using Elders.Cronus;
 namespace Cronus.Contracts
 {
     public class SimpleMessageAggregateAppService : ApplicationService<SimpleMessageAggregate>,
-       ICommandHandler<CreateSimpleMessage>, ICommandHandler<CreateGGMessage>
+       ICommandHandler<CreateSimpleMessage>
     {
         public SimpleMessageAggregateAppService(IAggregateRepository repository) : base(repository) { }
 
@@ -21,10 +21,6 @@ namespace Cronus.Contracts
                 var notFound = new SimpleMessageAggregate(command.Id, command.Timestamp);
                 repository.Save(notFound);
             }
-        }
-        public void Handle(CreateGGMessage command)
-        {
-
         }
     }
 }
