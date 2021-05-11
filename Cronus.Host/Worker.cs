@@ -1,4 +1,5 @@
 using Cronus.Contracts;
+using Cronus.Contracts.AggregateRootIDs;
 using Cronus.Contracts.Commands;
 using Elders.Cronus;
 using Elders.Cronus.Api;
@@ -36,11 +37,11 @@ namespace Cronus.Host
             _logger.LogInformation("Service started");
 
             //Input number of messages and type of messages
-            var list = CreateMessages<CreateSimpleMessage>(10_000);
+            var list = CreateMessages<CreateEmptyMessage>(10_000);
 
             //Input list of commangs, batchSize and delay
             //If batch size is less than 1 all messages that will be sent together
-            PublishCommandList(list, 0, 10);
+            PublishCommandList(list, 1000, 10);
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)
@@ -64,21 +65,23 @@ namespace Cronus.Host
         private void CreateGGMessageCommand(int index)
         {
             //Don't have implementation for Handle in AppService
-            SimpleMessageId simpleMessageId = new SimpleMessageId(Guid.NewGuid().ToString(), "elders");
-            commandPublisher.Publish(new CreateEmptyMessage(simpleMessageId, DateTimeOffset.Now));
+            EmptyMessageId emptyMessageId = new EmptyMessageId(Guid.NewGuid().ToString(), "elders");
+            commandPublisher.Publish(new CreateEmptyMessage(emptyMessageId, DateTimeOffset.Now));
         }
         ///////////////////////////////////////////////////////////////////////////////////
         #endregion
 
         public void PublishCommandList(IEnumerable<ICommand> commands, int batchSize, int delay)
         {
+            _logger.LogInformation($"Number of commands is {commands.Count()}");
+            _logger.LogInformation($"Delay between batches is {delay}");
             if (batchSize <= 0)
             {
                 SendCommandsGG(commands.ToList());
                 return;
             }
             var count = commands.Count();
-
+            _logger.LogInformation($"Batch size is {batchSize}");
             for (int i = 0; i < count / batchSize; i++)
             {
                 List<ICommand> batch = commands.Skip(batchSize * i).Take(batchSize).ToList();
@@ -93,6 +96,7 @@ namespace Cronus.Host
             {
                 commandPublisher.Publish(item);
             }
+            _logger.LogInformation($"{commands.Count} messages have been sent.");
         }
 
         public List<ICommand> CreateMessages<T>(int count)
@@ -103,18 +107,23 @@ namespace Cronus.Host
                 ICommand message = Activator.CreateInstance<T>() as ICommand;
                 list.Add(message);
             }
+            _logger.LogInformation($"{list.Count} messages have been created.");
             return list;
         }
 
-        public List<ICommand> CreateGGMessages(int count)
+        public List<ICommand> CreateEmptyMessages(int count)
         {
             List<ICommand> list = new List<ICommand>();
             for (int i = 0; i < count; i++)
             {
-                SimpleMessageId simpleMessageId = new SimpleMessageId(Guid.NewGuid().ToString(), "elders");
-                var message = new CreateEmptyMessage(simpleMessageId, DateTimeOffset.UtcNow);
+                //If you want to change Type of messages
+                //Change there Type of MessageId
+                EmptyMessageId emptyMessageId = new EmptyMessageId(Guid.NewGuid().ToString(), "elders");
+                //And there change constructor to be form type that you want
+                var message = new CreateEmptyMessage(emptyMessageId, DateTimeOffset.UtcNow);
                 list.Add(message);
             }
+            _logger.LogInformation($"{list.Count} messages have been created.");
             return list;
         }
     }
